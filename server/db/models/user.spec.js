@@ -5,28 +5,21 @@ const db = require('../index')
 const User = db.model('user')
 
 describe('User model', () => {
-  beforeEach(() => {
+  let user
+
+  beforeEach(async () => {
+    user = await User.create({hashedRoomId: '398f78s'})
     return db.sync({force: true})
   })
 
-  describe('instanceMethods', () => {
-    describe('correctPassword', () => {
-      let cody
+  describe('User Model Checks', () => {
+    it('user has only 4 fields', () => {
+      expect(Object.keys(user.dataValues).length).to.be.equal(5)
+    })
 
-      beforeEach(async () => {
-        cody = await User.create({
-          email: 'cody@puppybook.com',
-          password: 'bones'
-        })
-      })
-
-      it('returns true if the password is correct', () => {
-        expect(cody.correctPassword('bones')).to.be.equal(true)
-      })
-
-      it('returns false if the password is incorrect', () => {
-        expect(cody.correctPassword('bonez')).to.be.equal(false)
-      })
-    }) // end describe('correctPassword')
-  }) // end describe('instanceMethods')
+    it('user has string roomId that is not empty', () => {
+      expect(user.dataValues.hashedRoomId).to.be.an('string')
+      expect(user.dataValues.hashedRoomId.length).to.be.greaterThan(0)
+    })
+  }) // end describe ('User Model Checks')
 }) // end describe('User model')
