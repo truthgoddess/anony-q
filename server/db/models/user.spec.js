@@ -3,30 +3,37 @@
 const {expect} = require('chai')
 const db = require('../index')
 const User = db.model('user')
+const Room = db.model('room')
 
 describe('User model', () => {
-  beforeEach(() => {
-    return db.sync({force: true})
+  let user, room, hostUser
+
+  beforeEach(async () => {
+    try {
+      hostUser = await User.create({host: true})
+      user = await User.create({hashedRoomId: hostUser.hashedRoomId})
+      room = await Room.findOne({
+        where: {hashedRoomId: user.hashedRoomId},
+      })
+      return await db.sync({force: true})
+    } catch (error) {
+      console.log(error)
+    }
   })
 
-  describe('instanceMethods', () => {
-    describe('correctPassword', () => {
-      let cody
+  describe('User Model Checks', () => {
+    it('user has 6 fields', () => {
+      expect(Object.keys(user.dataValues).length).to.be.equal(6)
+    })
 
-      beforeEach(async () => {
-        cody = await User.create({
-          email: 'cody@puppybook.com',
-          password: 'bones'
-        })
-      })
+    it('user has string hashedRoomId that is not empty', () => {
+      expect(user.dataValues.hashedRoomId).to.be.an('string')
+      expect(user.dataValues.hashedRoomId.length).to.be.greaterThan(0)
+    })
 
-      it('returns true if the password is correct', () => {
-        expect(cody.correctPassword('bones')).to.be.equal(true)
-      })
-
-      it('returns false if the password is incorrect', () => {
-        expect(cody.correctPassword('bonez')).to.be.equal(false)
-      })
-    }) // end describe('correctPassword')
-  }) // end describe('instanceMethods')
+    it('has a roomId associated with it', () => {
+      expect(user.hashedRoomId).to.be.equal(room.hashedRoomId)
+      expect(user.dataValues.roomId).to.be.equal(room.dataValues.id)
+    })
+  }) // end describe ('User Model Checks')
 }) // end describe('User model')
