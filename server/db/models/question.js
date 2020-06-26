@@ -21,14 +21,18 @@ const Question = db.define('question', {
   },
 })
 
-Question.prototype.incLikes = function () {
+Question.prototype.incLikes = async function () {
   this.likes++
   this.isFavorite(90 / 100)
+  this.isTerrible(75 / 100)
+  await this.save()
 }
 
-Question.prototype.incDislikes = function () {
+Question.prototype.incDislikes = async function () {
   this.dislikes++
   this.isFavorite(90 / 100)
+  this.isTerrible(75 / 100)
+  await this.save()
 }
 
 Question.prototype.isFavorite = function (likePercentageThreshold) {
@@ -37,6 +41,17 @@ Question.prototype.isFavorite = function (likePercentageThreshold) {
       this.favorite = true
     } else {
       this.favorite = false
+    }
+  }
+}
+
+Question.prototype.isTerrible = async function (dislikePercentageThreshold) {
+  if (this.dislikes > 10) {
+    if (
+      this.dislikes / (this.likes + this.dislikes) >
+      dislikePercentageThreshold
+    ) {
+      await this.destroy()
     }
   }
 }

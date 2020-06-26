@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const crypto = require('crypto')
 
 const Room = db.define('room', {
   hashedRoomId: {
     type: Sequelize.STRING,
-    allowNull: false,
-    defaultValue: '',
   },
   hostId: {
     type: Sequelize.INTEGER,
@@ -45,9 +44,9 @@ module.exports = Room
 // /**
 //  * classMethods
 //  */
-// User.generateSalt = function() {
-//   return crypto.randomBytes(16).toString('base64')
-// }
+Room.generateRoomId = function () {
+  return crypto.randomBytes(6).toString('base64')
+}
 
 // User.encryptPassword = function(plainText, salt) {
 //   return crypto
@@ -60,14 +59,21 @@ module.exports = Room
 // /**
 //  * hooks
 //  */
-// const setSaltAndPassword = user => {
-//   if (user.changed('password')) {
-//     user.salt = User.generateSalt()
-//     user.password = User.encryptPassword(user.password(), user.salt())
-//   }
-// }
+const assignRoomId = async (room) => {
+  let roomId = await Room.generateRoomId()
+  let roomFound = await Room.findOne({
+    where: {hashedRoomId: roomId},
+  })
+  while (roomFound) {
+    roomId = Room.generateRoomId()
+    roomFound = await Room.findOne({
+      where: {hashedRoomId: roomId},
+    })
+  }
+  room.hashedRoomId = roomId
+}
 
-// User.beforeCreate(setSaltAndPassword)
+Room.afterValidate(assignRoomId)
 // User.beforeUpdate(setSaltAndPassword)
 // User.beforeBulkCreate(users => {
 //   users.forEach(setSaltAndPassword)

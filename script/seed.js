@@ -1,24 +1,57 @@
 'use strict'
 
 const db = require('../server/db')
-const {User, Room} = require('../server/db/models')
+const {User} = require('../server/db/models')
+
+let user1,
+  user2,
+  user3,
+  user4,
+  user5,
+  user6,
+  user7,
+  host1,
+  host2,
+  room1Id,
+  room2Id,
+  question1,
+  question2,
+  question3
 
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
 
-  const users = await Promise.all([
-    User.create({hashedRoomId: '398f78s'}),
-    User.create({hashedRoomId: '3kslkjf9'}),
-  ])
+  try {
+    host1 = await User.create({host: true})
+    host2 = await User.create({host: true})
+    room1Id = host1.hashedRoomId
+    room2Id = host2.hashedRoomId
+    user1 = await User.create({hashedRoomId: room1Id})
+    user2 = await User.create({hashedRoomId: room1Id})
+    user3 = await User.create({hashedRoomId: room1Id})
+    user4 = await User.create({hashedRoomId: room2Id})
+    user5 = await User.create({hashedRoomId: room2Id})
+    user6 = await User.create({hashedRoomId: room2Id})
+    user7 = await User.create({hashedRoomId: room2Id})
+    question1 = await user1.askQuestion('Why is the sky green?')
+    question2 = await user1.askQuestion(
+      'Is there anything wrong with a little sun?'
+    )
+    question3 = await user2.askQuestion('Do you know the nowhere land is fine?')
+    await question3.incLikes()
+  } catch (error) {
+    console.log(error)
+  }
 
-  const rooms = await Promise.all([
-    Room.create({hashedRoomId: '398f78s', hostId: 2}),
-    Room.create({hashedRoomId: '3kslkjf9', hostId: 3}),
-  ])
+  let rooms = [room1Id, room2Id]
+  let users = [user1, user2, user3, user4, user5, user6, user7]
+  let questions = [question1, question2, question3]
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded ${rooms.length} rooms`)
+  console.log(`seeded ${questions.length} questions`)
+  console.log(`liked one question ${question3.likes} times`)
   console.log(`seeded successfully`)
 }
 
