@@ -1,5 +1,6 @@
 const User = require('./user')
 const Room = require('./room')
+const Question = require('./question')
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -10,6 +11,8 @@ const Room = require('./room')
 
 User.belongsTo(Room)
 Room.hasMany(User)
+Question.belongsTo(User)
+User.hasMany(Question)
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
@@ -20,4 +23,5 @@ Room.hasMany(User)
 module.exports = {
   User,
   Room,
+  Question,
 }
