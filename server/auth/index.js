@@ -29,7 +29,7 @@ router.post('/', async (req, res, next) => {
 router.post('/ask/:userId', async (req, res, next) => {
   try {
     let user = await User.findByPk(req.params.userId)
-    user.askQuestion(req.body.question)
+    user.askQuestion(req.body.question, req.body.color)
     res.sendStatus(200)
   } catch (error) {
     next(error)

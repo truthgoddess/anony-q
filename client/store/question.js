@@ -1,4 +1,5 @@
 import axios from 'axios'
+const {colors, pickRandom} = require('../../script/utility/colors')
 
 /**
  * ACTION TYPES
@@ -22,6 +23,7 @@ const setQuestions = (questions) => ({type: SET_QUESTIONS, questions})
 export const fetchQuestions = (hashedRoomId) => async (dispatch) => {
   try {
     const {data} = await axios.get(`/api/questions/${hashedRoomId}`)
+    data.sort((a, b) => b.likes - a.likes)
     dispatch(setQuestions(data))
   } catch (error) {
     console.log(error)
@@ -37,8 +39,9 @@ export const likeQuestion = (questionId) => async () => {
 }
 
 export const addQuestion = (userId, question) => async () => {
+  const color = pickRandom(colors)
   try {
-    await axios.post(`/auth/ask/${userId}`, {question})
+    await axios.post(`/auth/ask/${userId}`, {question, color})
   } catch (error) {
     console.log(error)
   }

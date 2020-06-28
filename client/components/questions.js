@@ -1,7 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {Grid, Button, Menu, Icon, Label} from 'semantic-ui-react'
-import {colors, pickRandom} from '../../script/utility/colors'
 import {
   fetchQuestions,
   likeQuestion,
@@ -13,7 +12,7 @@ class Questions extends React.Component {
   constructor() {
     super()
     this.handleLikeClick = this.handleLikeClick.bind(this)
-    this.handleDisLikeClick = this.handleDislikeClick.bind(this)
+    this.handleDislikeClick = this.handleDislikeClick.bind(this)
     this.handleDeleteClick = this.handleDeleteClick.bind(this)
   }
   handleDislikeClick = async (buttonId) => {
@@ -36,69 +35,68 @@ class Questions extends React.Component {
 
   render() {
     const {questions, host} = this.props
+    console.log(questions)
     return (
       <Grid padded>
-        {questions
-          .map((question) => (
-            <Grid.Row key={question.id} columns={2}>
+        {questions.map((question) => (
+          <Grid.Row key={question.id} columns={2}>
+            <Grid.Column
+              color={question.color}
+              floated="left"
+              width={12}
+              textAlign="center"
+            >
+              {question.question}
+            </Grid.Column>
+            {host ? (
               <Grid.Column
-                color={pickRandom(colors)}
+                color={question.color}
                 floated="left"
-                width={12}
+                width={4}
                 textAlign="center"
               >
-                {question.question}
+                <Button
+                  color={question.color}
+                  onClick={() => this.handleDeleteClick(question.id)}
+                >
+                  Delete
+                </Button>
               </Grid.Column>
-              {host ? (
-                <Grid.Column
-                  color={pickRandom(colors)}
-                  floated="left"
-                  width={4}
-                  textAlign="center"
-                >
+            ) : (
+              <Grid.Column
+                color={question.color}
+                floated="left"
+                width={4}
+                textAlign="center"
+              >
+                <Menu compact>
                   <Button
-                    color={pickRandom(colors)}
-                    onClick={() => this.handleDeleteClick(question.id)}
+                    type="button"
+                    onClick={() => this.handleLikeClick(question.id)}
                   >
-                    Delete
+                    <Menu.Item color="green" as="a">
+                      <Icon name="arrow up" />
+                      <Label color="green" floating>
+                        {question.likes}
+                      </Label>
+                    </Menu.Item>
                   </Button>
-                </Grid.Column>
-              ) : (
-                <Grid.Column
-                  color={pickRandom(colors)}
-                  floated="left"
-                  width={4}
-                  textAlign="center"
-                >
-                  <Menu compact>
-                    <Button
-                      type="button"
-                      onClick={() => this.handleLikeClick(question.id)}
-                    >
-                      <Menu.Item color="green" as="a">
-                        <Icon name="arrow up" />
-                        <Label color="green" floating>
-                          {question.likes}
-                        </Label>
-                      </Menu.Item>
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => this.handleDislikeClick(question.id)}
-                    >
-                      <Menu.Item color="red" as="a">
-                        <Icon name="arrow down" />
-                        <Label color="red" floating>
-                          {question.dislikes}
-                        </Label>
-                      </Menu.Item>
-                    </Button>
-                  </Menu>
-                </Grid.Column>
-              )}
-            </Grid.Row>
-          ))
-          .sort()}
+                  <Button
+                    type="button"
+                    onClick={() => this.handleDislikeClick(question.id)}
+                  >
+                    <Menu.Item color="red" as="a">
+                      <Icon name="arrow down" />
+                      <Label color="red" floating>
+                        {question.dislikes}
+                      </Label>
+                    </Menu.Item>
+                  </Button>
+                </Menu>
+              </Grid.Column>
+            )}
+          </Grid.Row>
+        ))}
       </Grid>
     )
   }

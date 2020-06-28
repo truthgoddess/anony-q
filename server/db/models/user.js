@@ -45,10 +45,11 @@ const makeNewRoomOrAssign = async (user) => {
 }
 
 User.afterCreate(makeNewRoomOrAssign)
-User.prototype.askQuestion = async function (question) {
+User.prototype.askQuestion = async function (question, color) {
   let returnQuestion = await this.createQuestion({
     question: question,
     hashedRoomId: this.hashedRoomId,
+    color: color,
   })
   return returnQuestion
 }
