@@ -1,57 +1,74 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Grid, Input, Container, Button} from 'semantic-ui-react'
+import {Grid, Button, Menu, Icon, Label} from 'semantic-ui-react'
 import {colors, pickRandom} from '../../script/utility/colors'
+import {fetchQuestions} from '../store'
 
-const Questions = ({questions}) => (
-  <Grid padded>
-    <Grid.Row columns={2}>
-      <Grid.Column
-        color={pickRandom(colors)}
-        floated="left"
-        width={16}
-        textAlign="center"
-      >
-        {roomCode.length > 1 ? (
-          <Container>
-            <Input
-              icon="question circle icon"
-              iconPosition="left"
-              label={{tag: true, content: 'Enter Question'}}
-              labelPosition="right"
-              placeholder="Let me think..."
-            />
-            <Button color={pickRandom(colors)}>Submit</Button>
-          </Container>
-        ) : (
-          <Container>
-            <Input
-              icon="puzzle piece"
-              iconPosition="left"
-              label={{tag: true, content: 'Enter Room Code'}}
-              labelPosition="right"
-              placeholder="Ask your host..."
-            />
-            <Button color={pickRandom(colors)}>Submit</Button>
-          </Container>
-        )}
-      </Grid.Column>
-    </Grid.Row>
-  </Grid>
-)
+const Questions = ({questions, host}) => {
+  console.log('questios render')
+  return (
+    <Grid padded>
+      {questions.map((question) => (
+        <Grid.Row key={question.id} columns={2}>
+          <Grid.Column
+            color={pickRandom(colors)}
+            floated="left"
+            width={12}
+            textAlign="center"
+          ></Grid.Column>
+          {host ? (
+            <Grid.Column
+              color={pickRandom(colors)}
+              floated="left"
+              width={4}
+              textAlign="center"
+            >
+              <Button color={pickRandom(colors)}>Submit</Button>
+            </Grid.Column>
+          ) : (
+            <Grid.Column
+              color={pickRandom(colors)}
+              floated="left"
+              width={4}
+              textAlign="center"
+            >
+              <Menu compact>
+                <Menu.Item color="green" as="a">
+                  <Icon name="like" /> Messages
+                  <Label color="green" floating>
+                    22
+                  </Label>
+                </Menu.Item>
+                <Menu.Item color="red" as="a">
+                  <Icon name="dislike" /> Friends
+                  <Label color="red" floating>
+                    22
+                  </Label>
+                </Menu.Item>
+              </Menu>
+            </Grid.Column>
+          )}
+        </Grid.Row>
+      ))}
+    </Grid>
+  )
+}
 
 /**
  * CONTAINER
  */
 
-const mapDispatch = (dispatch) => {
-  return {}
-}
+// const mapDispatch = (dispatch) => {
+//   return {
+//     fetchQuestions
+//   }
+// }
 
 const mapState = (state) => {
   return {
     questions: state.questions,
+    host: state.host,
   }
 }
 
-export default connect(mapState, mapDispatch)(Questions)
+export default connect(mapState)(Questions)

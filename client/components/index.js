@@ -5,3 +5,4 @@
  */
 export {default as Navbar} from './navbar'
 export {default as QuestionBox} from './question-box'
+export {default as Questions} from './questions'

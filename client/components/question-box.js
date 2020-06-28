@@ -9,7 +9,7 @@ import {
   FormField,
 } from 'semantic-ui-react'
 import {colors, pickRandom} from '../../script/utility/colors'
-import {joinRoom} from '../store'
+import {joinRoom, fetchQuestions} from '../store'
 
 class QuestionBox extends React.Component {
   constructor() {
@@ -19,7 +19,15 @@ class QuestionBox extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    await this.props.joinRoom({hashedRoomId: e.target.roomCode.value})
+    if (this.props.hashedRoomId.length > 1) {
+      console.log(e.target.question.value)
+      e.target.question.value = ''
+    } else {
+      let roomCode = e.target.roomCode.value
+      await this.props.joinRoom({hashedRoomId: roomCode})
+      await this.props.fetchQuestions(roomCode)
+      document.getElementById('question-box').value = ''
+    }
   }
 
   render() {
@@ -34,19 +42,22 @@ class QuestionBox extends React.Component {
             textAlign="center"
           >
             {hashedRoomId.length > 1 ? (
-              <Form>
-                <FormField></FormField>
-                <Input
-                  name="question"
-                  icon="question circle"
-                  iconPosition="left"
-                  label={{tag: true, content: 'Enter Question'}}
-                  labelPosition="right"
-                  placeholder="Let me think..."
-                />
-                <Button color={pickRandom(colors)}>Submit</Button>
-                {error && error.response && <div> {error.response.data} </div>}
-                <FormField></FormField>
+              <Form onSubmit={this.handleSubmit}>
+                <FormField>
+                  <Input
+                    name="question"
+                    id="question-box"
+                    icon="question circle"
+                    iconPosition="left"
+                    label={{tag: true, content: 'Enter Question'}}
+                    labelPosition="right"
+                    placeholder="Let me think..."
+                  />
+                  <Button color={pickRandom(colors)}>Submit</Button>
+                  {error && error.response && (
+                    <div> {error.response.data} </div>
+                  )}
+                </FormField>
               </Form>
             ) : (
               <Form onSubmit={this.handleSubmit}>
@@ -82,6 +93,7 @@ class QuestionBox extends React.Component {
 const mapDispatch = (dispatch) => {
   return {
     joinRoom: (hashedRoomIdObj) => dispatch(joinRoom(hashedRoomIdObj)),
+    fetchQuestions: (roomId) => dispatch(fetchQuestions(roomId)),
   }
 }
 

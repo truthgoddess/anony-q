@@ -20,7 +20,6 @@ const setUser = (user) => ({type: SET_USER, user})
  */
 
 export const joinRoom = (hostOrRoomIdObj) => async (dispatch) => {
-  console.log(hostOrRoomIdObj)
   try {
     const {data} = await axios.post('/auth/', hostOrRoomIdObj) //{host: true} or {hashedRoomId: "dkjl"}
     dispatch(setUser(data))
