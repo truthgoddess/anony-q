@@ -9,7 +9,7 @@ import {
   FormField,
 } from 'semantic-ui-react'
 import {colors, pickRandom} from '../../script/utility/colors'
-import {joinRoom, fetchQuestions} from '../store'
+import {joinRoom, fetchQuestions, addQuestion} from '../store'
 
 class QuestionBox extends React.Component {
   constructor() {
@@ -19,9 +19,12 @@ class QuestionBox extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    if (this.props.hashedRoomId.length > 1) {
-      console.log(e.target.question.value)
-      e.target.question.value = ''
+    if (this.props.roomId.length > 1) {
+      // console.log(e.target.question.value)
+      // console.log(this.props)
+      await this.props.addQuestion(this.props.userId, e.target.question.value)
+      await this.props.fetchQuestions(this.props.roomId)
+      document.getElementById('question-box').value = ''
     } else {
       let roomCode = e.target.roomCode.value
       await this.props.joinRoom({hashedRoomId: roomCode})
@@ -31,7 +34,7 @@ class QuestionBox extends React.Component {
   }
 
   render() {
-    const {hashedRoomId = '', error} = this.props
+    const {roomId = '', error} = this.props
     return (
       <Grid padded>
         <Grid.Row columns={2}>
@@ -41,7 +44,7 @@ class QuestionBox extends React.Component {
             width={16}
             textAlign="center"
           >
-            {hashedRoomId.length > 1 ? (
+            {roomId.length > 1 ? (
               <Form onSubmit={this.handleSubmit}>
                 <FormField>
                   <Input
@@ -64,6 +67,7 @@ class QuestionBox extends React.Component {
                 <FormField>
                   <Input
                     name="roomCode"
+                    id="question-box"
                     icon="puzzle piece"
                     iconPosition="left"
                     label={{tag: true, content: 'Enter Room Code'}}
@@ -94,13 +98,15 @@ const mapDispatch = (dispatch) => {
   return {
     joinRoom: (hashedRoomIdObj) => dispatch(joinRoom(hashedRoomIdObj)),
     fetchQuestions: (roomId) => dispatch(fetchQuestions(roomId)),
+    addQuestion: (userId, question) => dispatch(addQuestion(userId, question)),
   }
 }
 
 const mapState = (state) => {
   return {
-    hashedRoomId: state.user.hashedRoomId,
+    roomId: state.user.hashedRoomId,
     host: state.user.host,
+    userId: state.user.id,
   }
 }
 

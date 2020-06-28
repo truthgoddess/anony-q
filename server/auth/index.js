@@ -26,9 +26,9 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.post('/ask', async (req, res, next) => {
+router.post('/ask/:userId', async (req, res, next) => {
   try {
-    let user = await User.findByPk(req.body.userId)
+    let user = await User.findByPk(req.params.userId)
     user.askQuestion(req.body.question)
     res.sendStatus(200)
   } catch (error) {

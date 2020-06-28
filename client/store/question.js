@@ -21,11 +21,40 @@ const setQuestions = (questions) => ({type: SET_QUESTIONS, questions})
 
 export const fetchQuestions = (hashedRoomId) => async (dispatch) => {
   try {
-    console.log('this is the hashedRoomId', hashedRoomId)
     const {data} = await axios.get(`/api/questions/${hashedRoomId}`)
-
-    console.log(data)
     dispatch(setQuestions(data))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const likeQuestion = (questionId) => async () => {
+  try {
+    await axios.put(`/api/questions/like/${questionId}`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const addQuestion = (userId, question) => async () => {
+  try {
+    await axios.post(`/auth/ask/${userId}`, {question})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const dislikeQuestion = (questionId) => async () => {
+  try {
+    await axios.put(`/api/questions/dislike/${questionId}`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const deleteQuestion = (questionId) => async () => {
+  try {
+    await axios.delete(`/api/questions/dislike/${questionId}`)
   } catch (error) {
     console.log(error)
   }
@@ -36,11 +65,8 @@ export const fetchQuestions = (hashedRoomId) => async (dispatch) => {
  */
 export default function (state = defaultQuestions, action) {
   switch (action.type) {
-    case SET_QUESTIONS: {
-      console.log(action)
+    case SET_QUESTIONS:
       return action.questions
-    }
-
     default:
       return state
   }
