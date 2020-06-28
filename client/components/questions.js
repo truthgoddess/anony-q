@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Grid, Input, Container, Button} from 'semantic-ui-react'
 import {colors, pickRandom} from '../../script/utility/colors'
 
-const Questions = ({messages = []}) => (
+const Questions = ({questions}) => (
   <Grid padded>
     <Grid.Row columns={2}>
       <Grid.Column
@@ -50,7 +50,7 @@ const mapDispatch = (dispatch) => {
 
 const mapState = (state) => {
   return {
-    messages: state.messages,
+    questions: state.questions,
   }
 }
 

@@ -6,10 +6,18 @@ router.post('/', async (req, res, next) => {
   try {
     if (req.body.host) {
       const user = await User.create({host: req.body.host})
-      res.send(user.hashedRoomId)
+      res.json({
+        hashedRoomId: user.hashedRoomId,
+        id: user.id,
+        host: user.host,
+      })
     } else if (req.body.hashedRoomId) {
       const user = await User.create({hashedRoomId: req.body.hashedRoomId})
-      res.send(user.hashedRoomId)
+      res.json({
+        hashedRoomId: user.hashedRoomId,
+        id: user.id,
+        host: user.host,
+      })
     } else {
       res.send("the body didn't contain the right information")
     }
