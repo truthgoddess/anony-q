@@ -4,6 +4,7 @@ import {Grid, Button} from 'semantic-ui-react'
 import {colors, pickRandom} from '../../script/utility/colors'
 import {joinRoom} from '../store'
 import {render} from 'enzyme'
+import socket from '../socket'
 
 class Navbar extends React.Component {
   constructor() {

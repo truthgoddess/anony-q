@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import socket from '../socket'
 /**
  * ACTION TYPES
  */
@@ -22,6 +22,7 @@ const setUser = (user) => ({type: SET_USER, user})
 export const joinRoom = (hostOrRoomIdObj) => async (dispatch) => {
   try {
     const {data} = await axios.post('/auth/', hostOrRoomIdObj) //{host: true} or {hashedRoomId: "dkjl"}
+    socket.emit('message', data.hashedRoomId)
     dispatch(setUser(data))
   } catch (err) {
     console.error(err)

@@ -57,7 +57,7 @@ export const dislikeQuestion = (questionId) => async () => {
 
 export const deleteQuestion = (questionId) => async () => {
   try {
-    await axios.delete(`/api/questions/dislike/${questionId}`)
+    await axios.delete(`/api/questions/delete/${questionId}`)
   } catch (error) {
     console.log(error)
   }
