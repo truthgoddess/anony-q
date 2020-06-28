@@ -1,3 +1,5 @@
+//export this in function that is called?
+
 import io from 'socket.io-client'
 
 const socket = io(window.location.origin)

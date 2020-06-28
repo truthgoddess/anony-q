@@ -19,6 +19,10 @@ const Question = db.define('question', {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
+  hashedRoomId: {
+    type: Sequelize.STRING,
+    defaultValue: '',
+  },
 })
 
 Question.prototype.incLikes = async function () {
