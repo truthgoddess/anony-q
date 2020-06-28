@@ -1,56 +1,29 @@
 import axios from 'axios'
-import history from '../history'
 
 /**
  * ACTION TYPES
  */
-const GET_USER = 'GET_USER'
-const REMOVE_USER = 'REMOVE_USER'
+const SET_USER = 'SET_USER'
 
 /**
  * INITIAL STATE
  */
-const defaultUser = {}
+const defaultUser = {host: false, userId: null, hashedRoomId: ''}
 
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({type: GET_USER, user})
-const removeUser = () => ({type: REMOVE_USER})
+const setUser = (user) => ({type: SET_USER, user})
 
 /**
  * THUNK CREATORS
  */
-export const me = () => async dispatch => {
-  try {
-    const res = await axios.get('/auth/me')
-    dispatch(getUser(res.data || defaultUser))
-  } catch (err) {
-    console.error(err)
-  }
-}
 
-export const auth = (email, password, method) => async dispatch => {
-  let res
+export const joinRoom = (hostOrRoomIdObj) => async (dispatch) => {
+  console.log(hostOrRoomIdObj)
   try {
-    res = await axios.post(`/auth/${method}`, {email, password})
-  } catch (authError) {
-    return dispatch(getUser({error: authError}))
-  }
-
-  try {
-    dispatch(getUser(res.data))
-    history.push('/home')
-  } catch (dispatchOrHistoryErr) {
-    console.error(dispatchOrHistoryErr)
-  }
-}
-
-export const logout = () => async dispatch => {
-  try {
-    await axios.post('/auth/logout')
-    dispatch(removeUser())
-    history.push('/login')
+    const {data} = await axios.post('/auth/', hostOrRoomIdObj) //{host: true} or {hashedRoomId: "dkjl"}
+    dispatch(setUser(data))
   } catch (err) {
     console.error(err)
   }
@@ -59,12 +32,10 @@ export const logout = () => async dispatch => {
 /**
  * REDUCER
  */
-export default function(state = defaultUser, action) {
+export default function (state = defaultUser, action) {
   switch (action.type) {
-    case GET_USER:
+    case SET_USER:
       return action.user
-    case REMOVE_USER:
-      return defaultUser
     default:
       return state
   }

@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 const Room = require('./room')
-const Question = require('./question')
 
 //have to remember, when creating a new user, everything depends
 //upon whether the User.create has host as true (make new room) or inputs a hashRoomId (get assigned to a room)
@@ -47,7 +46,10 @@ const makeNewRoomOrAssign = async (user) => {
 
 User.afterCreate(makeNewRoomOrAssign)
 User.prototype.askQuestion = async function (question) {
-  let returnQuestion = await this.createQuestion({question: question})
+  let returnQuestion = await this.createQuestion({
+    question: question,
+    hashedRoomId: this.hashedRoomId,
+  })
   return returnQuestion
 }
 

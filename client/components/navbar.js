@@ -1,56 +1,64 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
-import {logout} from '../store'
+import {Grid, Button} from 'semantic-ui-react'
+import {colors, pickRandom} from '../../script/utility/colors'
+import {joinRoom} from '../store'
+import {render} from 'enzyme'
 
-const Navbar = ({handleClick, isLoggedIn}) => (
-  <div>
-    <h1>BOILERMAKER</h1>
-    <nav>
-      {isLoggedIn ? (
-        <div>
-          {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <a href="#" onClick={handleClick}>
-            Logout
-          </a>
-        </div>
-      ) : (
-        <div>
-          {/* The navbar will show these links before you log in */}
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
-        </div>
-      )}
-    </nav>
-    <hr />
-  </div>
-)
+class Navbar extends React.Component {
+  constructor() {
+    super()
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  handleClick = async () => {
+    console.log('hi')
+    await this.props.makeNewRoom({host: true})
+  }
+
+  render() {
+    const {isHost, hashedRoomId = ''} = this.props
+    return (
+      <Grid>
+        <Grid.Row verticalAlign="middle" columns={2}>
+          <Grid.Column color={pickRandom(colors)} width={8} textAlign="center">
+            <div>Anoyn-Q {isHost ? 'host' : 'non-host'}</div>
+          </Grid.Column>
+          <Grid.Column
+            verticalAlign="middle"
+            color={pickRandom(colors)}
+            floated="left"
+            textAlign="center"
+            width={8}
+          >
+            {hashedRoomId.length > 1 ? (
+              hashedRoomId
+            ) : (
+              <Button onClick={this.handleClick} color={pickRandom(colors)}>
+                Make New Room
+              </Button>
+            )}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    )
+  }
+}
 
 /**
  * CONTAINER
  */
-const mapState = state => {
+const mapState = (state) => {
   return {
-    isLoggedIn: !!state.user.id
+    isHost: state.user.host,
+    hashedRoomId: state.user.hashedRoomId,
   }
 }
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch) => {
   return {
-    handleClick() {
-      dispatch(logout())
-    }
+    makeNewRoom: (putHostTrue) => dispatch(joinRoom(putHostTrue)),
   }
 }
 
 export default connect(mapState, mapDispatch)(Navbar)
-
-/**
- * PROP TYPES
- */
-Navbar.propTypes = {
-  handleClick: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
-}
