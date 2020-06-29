@@ -1,5 +1,6 @@
 import axios from 'axios'
 const {colors, pickRandom} = require('../../script/utility/colors')
+import socket from '../socket'
 
 /**
  * ACTION TYPES

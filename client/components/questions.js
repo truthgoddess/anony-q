@@ -7,6 +7,7 @@ import {
   dislikeQuestion,
   deleteQuestion,
 } from '../store'
+import socket from '../socket'
 
 class Questions extends React.Component {
   constructor() {
@@ -19,18 +20,21 @@ class Questions extends React.Component {
     console.log('dislike', buttonId)
     await this.props.dislikeQuestion(buttonId)
     await this.props.fetchQuestions(this.props.roomId)
+    socket.emit('everyoneUpdate', this.props.roomId)
   }
 
   handleLikeClick = async (buttonId) => {
     console.log('like', buttonId)
     await this.props.likeQuestion(buttonId)
     await this.props.fetchQuestions(this.props.roomId)
+    socket.emit('everyoneUpdate', this.props.roomId)
   }
 
   handleDeleteClick = async (buttonId) => {
     console.log('delete', buttonId)
     await this.props.deleteQuestion(buttonId)
     await this.props.fetchQuestions(this.props.roomId)
+    socket.emit('everyoneUpdate', this.props.roomId)
   }
 
   render() {

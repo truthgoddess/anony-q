@@ -10,6 +10,7 @@ import {
 } from 'semantic-ui-react'
 import {colors, pickRandom} from '../../script/utility/colors'
 import {joinRoom, fetchQuestions, addQuestion} from '../store'
+import socket from '../socket'
 
 class QuestionBox extends React.Component {
   constructor() {
@@ -24,6 +25,7 @@ class QuestionBox extends React.Component {
       // console.log(this.props)
       await this.props.addQuestion(this.props.userId, e.target.question.value)
       await this.props.fetchQuestions(this.props.roomId)
+      socket.emit('everyoneUpdate', this.props.roomId)
       document.getElementById('question-box').value = ''
     } else {
       let roomCode = e.target.roomCode.value

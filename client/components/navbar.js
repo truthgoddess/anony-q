@@ -13,7 +13,6 @@ class Navbar extends React.Component {
   }
 
   handleClick = async () => {
-    console.log('hi')
     await this.props.makeNewRoom({host: true})
   }
 
