@@ -4,7 +4,7 @@ const db = require('../index')
 const Room = db.model('room')
 const User = db.model('user')
 
-describe('Room model', () => {
+describe.only('Room model', () => {
   let hostUser
   let guestUser
   let room
