@@ -17,20 +17,20 @@ describe.only('Room model', () => {
   })
 
   describe('Room Model Checks', () => {
-    it('has a randomized hashedRoomId automatcially generated', () => {
+    xit('has a randomized hashedRoomId automatcially generated', () => {
       expect(room.hashedRoomId).to.be.an('string')
       expect(room.hashedRoomId.length).to.be.greaterThan(0)
     })
 
-    it('room has 5 fields', () => {
+    xit('room has 5 fields', () => {
       expect(Object.keys(room.dataValues).length).to.be.equal(5)
     })
 
-    it('has a hostId that is the same as the hostUser', () => {
+    xit('has a hostId that is the same as the hostUser', () => {
       expect(hostUser.id).to.be.equal(room.hostId)
     })
 
-    it('room has an integer userId that is not empty', () => {
+    xit('room has an integer userId that is not empty', () => {
       expect(room.dataValues.hostId).to.be.an('number')
     })
   }) // end describe ('Room Model Checks')
