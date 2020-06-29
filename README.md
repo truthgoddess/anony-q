@@ -2,6 +2,8 @@
 
 _Anony-q is a chat app developed by Kate Norton (https://github.com/truthgoddess) that is primarily focused on serving good questions to good people in a way that facilitates host question management and positive user experience_
 
+Built starting from this boilerplate (https://github.com/FullstackAcademy/boilermaker), using postgres, sequelize, react, express, node, redux, react-redux, socket.io, and semantic.ui.
+
 The app was created to give groups a quick and easy way of making Q&A sessions more interactive and enjoyable, and provide opportunities for more question control for hosts, and less anxious moments for users. It also gives users the opportunity to like questions they really want to hear, and to downrank questions that are terrible. It also can help keep the energy of a room up and allow users some aspect of control over their audience experience during a Q&A.
 
 To use the app, go to the production build's website (https://anony-q.herokuapp.com/) and click on the button to make a new room. You will enter a room as a host, and be the only person who can ever be host in that room. Give the code that is on the top right of the screen to the other users. The host can delete questions by clicking a button, and it will be removed from all users screens. Users can downrank or uprank questions to increase their position in the queue.
