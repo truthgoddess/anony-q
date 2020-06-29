@@ -1,5 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const {colors} = require('../../../script/utility/colors')
+const {pickRandom} = require('../../../script/utility/colors')
 
 const Question = db.define('question', {
   question: {
@@ -22,6 +24,10 @@ const Question = db.define('question', {
   hashedRoomId: {
     type: Sequelize.STRING,
     defaultValue: '',
+  },
+  color: {
+    type: Sequelize.STRING,
+    defaultValue: pickRandom(colors),
   },
 })
 

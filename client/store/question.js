@@ -1,4 +1,6 @@
 import axios from 'axios'
+const {colors, pickRandom} = require('../../script/utility/colors')
+import socket from '../socket'
 
 /**
  * ACTION TYPES
@@ -19,14 +21,46 @@ const setQuestions = (questions) => ({type: SET_QUESTIONS, questions})
  * THUNK CREATORS
  */
 
-export const fetchQuestions = () => async (dispatch) => {
+export const fetchQuestions = (hashedRoomId) => async (dispatch) => {
   try {
-    const {data} = await axios.get('/api/questions') //{host: true} or {hashedRoomId: "dkjl"}
-    //should we sort the data here? or in component?
-    //Let's give the computer stuff to do, and leave the server out of it
+    const {data} = await axios.get(`/api/questions/${hashedRoomId}`)
+    data.sort((a, b) => b.likes - a.likes)
     dispatch(setQuestions(data))
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const likeQuestion = (questionId) => async () => {
+  try {
+    await axios.put(`/api/questions/like/${questionId}`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const addQuestion = (userId, question) => async () => {
+  const color = pickRandom(colors)
+  try {
+    await axios.post(`/auth/ask/${userId}`, {question, color})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const dislikeQuestion = (questionId) => async () => {
+  try {
+    await axios.put(`/api/questions/dislike/${questionId}`)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const deleteQuestion = (questionId) => async () => {
+  try {
+    await axios.delete(`/api/questions/delete/${questionId}`)
+  } catch (error) {
+    console.log(error)
   }
 }
 

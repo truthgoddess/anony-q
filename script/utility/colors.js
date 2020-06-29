@@ -1,4 +1,4 @@
-export const colors = [
+const colors = [
   'red',
   'orange',
   'yellow',
@@ -14,6 +14,11 @@ export const colors = [
   'black',
 ]
 
-export function pickRandom(arr) {
+function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)]
+}
+
+module.exports = {
+  colors,
+  pickRandom,
 }
